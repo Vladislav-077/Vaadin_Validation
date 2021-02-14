@@ -1,0 +1,21 @@
+@import "mytheme.scss";
+@import "addons.scss";
+
+// This file prefixes all rules with the theme name to avoid causing conflicts with other themes.
+// The actual styles should be defined in mytheme.scss
+
+.mytheme {
+  @include addons;
+  @include mytheme;
+
+  .ace_marker-layer .mymarker1 {
+      background: red;
+    	border-bottom: 2px solid black;
+    	position: absolute;
+  }
+  .ace_marker-layer .myerrormarker1 {
+      border-bottom: 2px dotted red;
+      position: absolute;
+  }
+
+}
