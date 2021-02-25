@@ -47,6 +47,9 @@ public class TextValidationPanel extends VerticalLayout {
         setSpacing(true);
     }
 
+    /**
+     * Устанавливаем регулярное выражение.
+     **/
     public void setPattern(String regexp) {
         pattern = Pattern.compile(regexp);
     }
@@ -96,14 +99,19 @@ public class TextValidationPanel extends VerticalLayout {
             AceRange range = AceRange.fromPositions(matcher.start(), matcher.end(), text);
             AceMarker m = new AceMarker(newErrorMarkerId(), range, "myerrormarker1", AceMarker.Type.text, false, AceMarker.OnTextChange.ADJUST);
             aceEditor.addMarker(m);
-            AceAnnotation ann = new AceAnnotation("X's not allowed here! (" + matcher.group() + ")", AceAnnotation.Type.error);
-            aceEditor.addMarkerAnnotation(ann, m);
+
+
+            // FIXME : Анотации работают не корректно, выявленны сделующие проблемы.
+            // 1. При указании регулярного выражения \s* - пробелы подчеркиваются красными точками и возникает анотация..
+            // 2. Если строка не подчеркивается как ошибка, анотация все равно проставляется.
+            AceAnnotation ann = new AceAnnotation("Запрещено использовать : (" + matcher.group() + ")", AceAnnotation.Type.error);
+            aceEditor.addMarkerAnnotation(ann,m);
         }
 
     }
 
     public void setAceEditorEnable(boolean isEnable) {
-        aceEditor.setEnabled(isEnable);
+//        aceEditor.setEnabled(isEnable);
     }
 
 
