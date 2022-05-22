@@ -14,9 +14,9 @@ import org.vaadin.aceeditor.AceTheme;
 public class TextValidationPanel extends VerticalLayout {
     private static Logger log = LogManager.getLogger(TextValidationPanel.class);
     private Button ok;
-    private static final Panel logViewPanel = new Panel();
-    private static AceEditor aceEditor;
-    private static Button buttonClearText;
+    private Panel logViewPanel = new Panel();
+    private AceEditor aceEditor;
+    private Button buttonClearText;
     private Button okTestWord;
 
     public TextValidationPanel(Button okTestWord) {

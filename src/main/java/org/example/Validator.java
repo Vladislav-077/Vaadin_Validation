@@ -1,10 +1,8 @@
 package org.example;
 
-import com.vaadin.external.org.slf4j.Marker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vaadin.aceeditor.AceEditor;
-import org.vaadin.aceeditor.client.AceAnnotation;
 import org.vaadin.aceeditor.client.AceMarker;
 import org.vaadin.aceeditor.client.AceRange;
 

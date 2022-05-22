@@ -1,7 +1,10 @@
 package org.example;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
+
+import com.vaadin.annotations.PreserveOnRefresh;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +12,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.*;
 import com.vaadin.ui.*;
+
+import static com.vaadin.server.Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window
@@ -18,23 +23,27 @@ import com.vaadin.ui.*;
  * overridden to add component to the user interface and initialize non-component functionality.
  */
 @Theme("mytheme")
+@PreserveOnRefresh
 public class MyUI extends UI {
     private static Logger log = LogManager.getLogger(MyUI.class);
 
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        final VerticalLayout layout = new VerticalLayout();
-        final LogViewPanel logViewPanel = new LogViewPanel(); //Панель логирования для тектового поля.
-        final TestWorldLayout testWorldLayout = new TestWorldLayout(logViewPanel); //Layout для тектового поля
+
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(1500);
+
+        VerticalLayout layout = new VerticalLayout();
+        LogViewPanel logViewPanel = new LogViewPanel(); //Панель логирования для тектового поля.
+        TestWorldLayout testWorldLayout = new TestWorldLayout(logViewPanel); //Layout для тектового поля
 
         /** Layout самостоятельного поля валидации. **/
-        final TextValidationPanel textValidationPanel = new TextValidationPanel(testWorldLayout.getButtonOkTestWord());
+        TextValidationPanel textValidationPanel = new TextValidationPanel(testWorldLayout.getButtonOkTestWord());
 
 
         /** Layout для поля с регулярным выражением, в который я передаю поле ввода сетового слова и кнопку ок,
          * для дальнейшего управления этими элементами  **/
-        final RegexpLayout regexpLayout = new RegexpLayout(testWorldLayout.getButtonOkTestWord(),testWorldLayout.getTextFieldTestWord());
+        RegexpLayout regexpLayout = new RegexpLayout(testWorldLayout.getButtonOkTestWord(), testWorldLayout.getTextFieldTestWord());
 
         /** Слой для объединения двух панелей */
         HorizontalLayout panelUnitLayout = new HorizontalLayout(logViewPanel,textValidationPanel);
@@ -50,9 +59,9 @@ public class MyUI extends UI {
         this.getReconnectDialogConfiguration().setDialogText("Соединение с сервером потеряно, попытка переподключения ...");
     }
 
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
-    public static class MyUIServlet extends VaadinServlet {
+    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true, initParams = @WebInitParam(name = SERVLET_PARAMETER_HEARTBEAT_INTERVAL, value = "10"))
+    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false, closeIdleSessions = true)
+    public static class MyUIServlet extends VaadinServlet implements SessionDestroyListener {
         @Override
         protected void servletInitialized() throws ServletException {
 
@@ -66,7 +75,13 @@ public class MyUI extends UI {
                     return customizedSystemMessages;
                 }
             });
+
         }
 
+        @Override
+        public void sessionDestroy(SessionDestroyEvent event) {
+            VaadinService.getCurrentRequest().getWrappedSession().invalidate();
+            log.info("SESSION INVALID");
+        }
     }
 }

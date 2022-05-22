@@ -7,8 +7,8 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class LogViewPanel extends VerticalLayout {
-    private static final Panel logViewPanel = new Panel();
-    private static final Label contentLogPanelLabel = new Label("",ContentMode.PREFORMATTED);
+    private Panel logViewPanel = new Panel();
+    private Label contentLogPanelLabel = new Label("", ContentMode.PREFORMATTED);
 
     public LogViewPanel() {
         logViewPanel.setCaption("Панель логирования");
