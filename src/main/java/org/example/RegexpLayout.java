@@ -1,9 +1,6 @@
 package org.example;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
-import com.vaadin.data.validator.NullValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
